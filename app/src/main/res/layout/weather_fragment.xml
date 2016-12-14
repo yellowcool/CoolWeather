@@ -2,57 +2,56 @@
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-<data>
-    <variable
-        name="presenter"
-        type="test.collyellow.coolweather.fragment.WeatherFragment.Presenter"/>
-</data>
-    <android.support.design.widget.CoordinatorLayout
 
+    <data>
+
+        <variable
+            name="presenter"
+            type="test.collyellow.coolweather.fragment.WeatherFragment.Presenter" />
+    </data>
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@mipmap/bg_fog_day"
+        android:orientation="vertical">
 
-        <ImageView
+        <RelativeLayout
+            android:id="@+id/title"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@mipmap/bg_fog_day" />
-
-        <android.support.design.widget.AppBarLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#00000000"
-            android:fitsSystemWindows="true">
+            android:layout_height="40dp"
+            android:background="#00000000">
 
             <LinearLayout
-                android:id="@+id/title"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:background="#00000000"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:onClick="@{presenter.onClick}"
-                >
+                android:padding="6dp">
 
                 <ImageView
+                    android:id="@+id/weather_fragment_loaction_icon"
                     android:layout_width="15dp"
                     android:layout_height="15dp"
-                    android:layout_marginLeft="6dp"
+                    android:layout_marginLeft="12dp"
                     android:src="@mipmap/ic_location" />
 
                 <TextView
                     android:id="@+id/weather_fragment_recyclerview_city"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:layout_marginLeft="4dp"
+                    android:background="@drawable/weather_fragment_city_bg"
                     android:gravity="center"
                     android:text="阿发啊"
                     android:textColor="#fff" />
             </LinearLayout>
-        </android.support.design.widget.AppBarLayout>
+        </RelativeLayout>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/weather_fragment_recyclerview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#00000000"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-    </android.support.design.widget.CoordinatorLayout>
+            android:background="#00000000" />
+    </LinearLayout>
 </layout>

@@ -10,7 +10,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
@@ -18,6 +17,7 @@ import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 
 import test.collyellow.coolweather.App;
+import test.collyellow.coolweather.MyToast;
 import test.collyellow.coolweather.R;
 import test.collyellow.coolweather.adapter.WeatherFragmentRecyclerViewAdapter;
 import test.collyellow.coolweather.databinding.WeatherFragmentBinding;
@@ -34,7 +34,7 @@ public class WeatherFragment extends Fragment {
 
     public class Presenter {
         public void onClick(View view) {
-            Toast.makeText(App.context, "aaaaaa", Toast.LENGTH_SHORT).show();
+            MyToast.show("aaaaaaaaaaa");
         }
     }
 
@@ -47,12 +47,17 @@ public class WeatherFragment extends Fragment {
         mLocationClient.start();
         binding = DataBindingUtil.inflate(inflater, R.layout.weather_fragment, container, false);
         binding.setPresenter(new Presenter());
+        initData();
         binding.weatherFragmentRecyclerview.setLayoutManager(new LinearLayoutManager(App.context));
+
+        return binding.getRoot();
+    }
+
+    private void initData() {
         binding.weatherFragmentRecyclerview.setAdapter(new WeatherFragmentRecyclerViewAdapter());
         binding.weatherFragmentRecyclerview.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                int height = binding.title.getHeight();
                 if (dy > 0) {
                     y += dy;
                     if (y > 200) {
@@ -74,7 +79,6 @@ public class WeatherFragment extends Fragment {
                 }
             }
         });
-        return binding.getRoot();
     }
 
     private void initLocation() {
