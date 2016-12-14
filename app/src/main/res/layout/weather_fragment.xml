@@ -2,7 +2,11 @@
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-
+<data>
+    <variable
+        name="presenter"
+        type="test.collyellow.coolweather.fragment.WeatherFragment.Presenter"/>
+</data>
     <android.support.design.widget.CoordinatorLayout
 
         android:layout_width="match_parent"
@@ -23,14 +27,24 @@
                 android:id="@+id/title"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:background="#00000000">
+                android:background="#00000000"
+                android:gravity="center_vertical"
+                android:onClick="@{presenter.onClick}"
+                >
+
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_marginLeft="6dp"
+                    android:src="@mipmap/ic_location" />
 
                 <TextView
-                    android:layout_width="100dp"
+                    android:id="@+id/weather_fragment_recyclerview_city"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center"
-                    android:textColor="#f00"
-                    android:text="阿发啊" />
+                    android:text="阿发啊"
+                    android:textColor="#fff" />
             </LinearLayout>
         </android.support.design.widget.AppBarLayout>
 
