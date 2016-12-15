@@ -51,6 +51,7 @@ public class WeatherFragmentRecyclerViewAdapter extends RecyclerView.Adapter<Wea
 
     @Override
     public void onBindViewHolder(WeatherFragmentRecyclerHolder holder, int position) {
+
         holder.getBinding().setVariable(BR.item, "aaa");
         holder.getBinding().executePendingBindings();
     }

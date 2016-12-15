@@ -32,6 +32,7 @@ public class WeatherFragment extends Fragment {
     public LocationClient mLocationClient = null;
     public BDLocationListener myListener = new MyLocationListener();
     private WeatherFragmentBinding binding;
+
     public class Presenter {
         public void onClick(View view) {
             switch (view.getId()) {
@@ -69,21 +70,26 @@ public class WeatherFragment extends Fragment {
         binding.weatherFragmentRecyclerview.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                binding.weatherFragmentRecyclerview.isAnimator = false;
+                View childAt = binding.weatherFragmentRecyclerview.getChildAt(0);
+                if (childAt.getY() < -childAt.getHeight() / 2) {
+                    binding.weatherFragmentRecyclerview.isAnimator = true;
+                }
                 if (dy > 0) {
-                    y += dy;
-                    if (y > 200) {
-                        y = 200;
+                    WeatherFragment.this.y += dy;
+                    if (WeatherFragment.this.y > 200) {
+                        WeatherFragment.this.y = 200;
                     }
-                    int scale = (int) Math.abs((y * 1.0 / 200) * 255);
+                    int scale = (int) Math.abs((WeatherFragment.this.y * 1.0 / 200) * 255);
                     binding.title.setBackgroundColor(Color.argb((int) scale, 0, 0, 0));
                     int scale2 = scale / 3;
                     binding.weatherFragmentRecyclerview.setBackgroundColor(Color.argb(scale2, 0, 0, 0));
                 } else {
-                    y += dy;
-                    if (y < 0) {
-                        y = 0;
+                    WeatherFragment.this.y += dy;
+                    if (WeatherFragment.this.y < 0) {
+                        WeatherFragment.this.y = 0;
                     }
-                    int scale = (int) Math.abs((y * 1.0 / 200) * 255);
+                    int scale = (int) Math.abs((WeatherFragment.this.y * 1.0 / 200) * 255);
                     binding.title.setBackgroundColor(Color.argb(scale, 0, 0, 0));
                     int scale2 = scale / 3;
                     binding.weatherFragmentRecyclerview.setBackgroundColor(Color.argb(scale2, 0, 0, 0));

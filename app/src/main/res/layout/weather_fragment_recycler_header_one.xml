@@ -3,9 +3,6 @@
 
     <data>
 
-        <variable
-            name="presenter"
-            type="test.collyellow.coolweather.fragment.WeatherFragment.Presenter" />
     </data>
 
     <RelativeLayout
@@ -148,7 +145,6 @@
             android:layout_marginLeft="20dp"
             android:background="@drawable/header_bg"
             android:drawableLeft="@mipmap/icon_tab_me_message_pressed_cn"
-            android:onClick="@{presenter.onClick}"
             android:padding="6dp"
             android:text="反馈天气"
             android:textColor="#fff" />
