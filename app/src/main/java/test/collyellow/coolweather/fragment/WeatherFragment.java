@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,10 +32,18 @@ public class WeatherFragment extends Fragment {
     public LocationClient mLocationClient = null;
     public BDLocationListener myListener = new MyLocationListener();
     private WeatherFragmentBinding binding;
-
     public class Presenter {
         public void onClick(View view) {
-            MyToast.show("aaaaaaaaaaa");
+            switch (view.getId()) {
+                case R.id.header_one_fk_bt:
+                    Log.e("childe", "child = ??????????????");
+                    View childAt = binding.weatherFragmentRecyclerview.getChildAt(0);
+                    Log.e("childe", "child = " + childAt);
+                    break;
+                case R.id.weather_fragment_location_ll:
+                    MyToast.show("aaaaaaaaaaa");
+                    break;
+            }
         }
     }
 
@@ -47,14 +56,16 @@ public class WeatherFragment extends Fragment {
         mLocationClient.start();
         binding = DataBindingUtil.inflate(inflater, R.layout.weather_fragment, container, false);
         binding.setPresenter(new Presenter());
-        initData();
         binding.weatherFragmentRecyclerview.setLayoutManager(new LinearLayoutManager(App.context));
-
+        initData();
         return binding.getRoot();
     }
 
     private void initData() {
+
         binding.weatherFragmentRecyclerview.setAdapter(new WeatherFragmentRecyclerViewAdapter());
+
+//        Log.e("height","height = "+height);
         binding.weatherFragmentRecyclerview.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {

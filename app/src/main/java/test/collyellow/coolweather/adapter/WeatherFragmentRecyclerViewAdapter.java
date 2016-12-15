@@ -59,4 +59,5 @@ public class WeatherFragmentRecyclerViewAdapter extends RecyclerView.Adapter<Wea
     public int getItemCount() {
         return 20;
     }
+
 }
