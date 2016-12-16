@@ -3,6 +3,7 @@ package test.collyellow.coolweather.service;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
+import rx.Observable;
 import test.collyellow.coolweather.bean.WeatherBean;
 
 /**
@@ -17,4 +18,11 @@ public interface RetrofitService {
                                      @Query("unit") String unit,
                                      @Query("start") int start,
                                      @Query("days") int days);
+    @GET("daily.json")
+    Observable<WeatherBean> getWeather(@Query("key") String key,
+                          @Query("location") String location,
+                          @Query("language") String language,
+                          @Query("unit") String unit,
+                          @Query("start") int start,
+                          @Query("days") int days);
 }

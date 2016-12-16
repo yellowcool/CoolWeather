@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,11 +19,13 @@ import com.baidu.location.LocationClientOption;
 import java.util.ArrayList;
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
+import rx.Observable;
+import rx.Observer;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 import test.collyellow.coolweather.App;
 import test.collyellow.coolweather.MyToast;
 import test.collyellow.coolweather.R;
@@ -77,6 +78,7 @@ public class WeatherFragment extends Fragment {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://api.thinkpage.cn/v3/weather/")
                 .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .build();
         retrofitService = retrofit.create(RetrofitService.class);
         //key=ezkig1mno74bzpcm&location=beijing&language=zh-Hans&unit=c&start=0&days=5
@@ -145,22 +147,28 @@ public class WeatherFragment extends Fragment {
             String city = location.getCity();
             if (city != null) {
                 binding.weatherFragmentRecyclerviewCity.setText(city);
-                Call<WeatherBean> searchWeather = retrofitService.getSearchBooks("ezkig1mno74bzpcm", city, "zh-Hans", "c", 0, 5);
-                searchWeather.enqueue(new Callback<WeatherBean>() {
-                    @Override
-                    public void onResponse(Call<WeatherBean> call, Response<WeatherBean> response) {
-                        Log.e("body", response.body().getResults().get(0).getDaily().get(0).getCode_day() + "===");
-                        lists.clear();
-                        lists.add(response.body());
-                        binding.weatherFragmentRecyclerviewTest.setText(response.body().getResults().get(0).getDaily().get(0).getCode_day());
-                        adapter.notifyDataSetChanged();
-                    }
+                Observable<WeatherBean> observable = retrofitService.getWeather("ezkig1mno74bzpcm", city, "zh-Hans", "c", 0, 5);
+                observable.observeOn(AndroidSchedulers.mainThread())
+                        .subscribeOn(Schedulers.io())
+                        .subscribe(new Observer<WeatherBean>() {
+                            @Override
+                            public void onCompleted() {
 
-                    @Override
-                    public void onFailure(Call<WeatherBean> call, Throwable t) {
+                            }
 
-                    }
-                });
+                            @Override
+                            public void onError(Throwable e) {
+
+                            }
+
+                            @Override
+                            public void onNext(WeatherBean weatherBean) {
+                                lists.clear();
+                                lists.add(weatherBean);
+                                binding.weatherFragmentRecyclerviewTest.setText(weatherBean.getResults().get(0).getDaily().get(0).getCode_day());
+                                adapter.notifyDataSetChanged();
+                            }
+                        });
             }
         }
     }
