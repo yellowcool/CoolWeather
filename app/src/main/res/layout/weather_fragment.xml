@@ -8,6 +8,9 @@
         <variable
             name="presenter"
             type="test.collyellow.coolweather.fragment.WeatherFragment.Presenter" />
+        <variable
+            name="item"
+            type="test.collyellow.coolweather.bean.WeatherBean.ResultsBean.DailyBean"/>
     </data>
 
     <LinearLayout
@@ -45,6 +48,15 @@
                     android:background="@drawable/weather_fragment_city_bg"
                     android:gravity="center"
                     android:text="阿发啊"
+                    android:textColor="#fff" />
+                <TextView
+                    android:id="@+id/weather_fragment_recyclerview_test"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="4dp"
+                    android:background="@drawable/weather_fragment_city_bg"
+                    android:gravity="center"
+                    android:text="@{item.code_day}"
                     android:textColor="#fff" />
             </LinearLayout>
         </RelativeLayout>

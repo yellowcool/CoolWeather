@@ -6,9 +6,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
+import java.util.List;
+
 import test.collyellow.coolweather.App;
 import test.collyellow.coolweather.BR;
 import test.collyellow.coolweather.R;
+import test.collyellow.coolweather.bean.WeatherBean;
 import test.collyellow.coolweather.holder.WeatherFragmentRecyclerHolder;
 
 /**
@@ -21,7 +24,10 @@ public class WeatherFragmentRecyclerViewAdapter extends RecyclerView.Adapter<Wea
     private static int TYPE_THIRD = 2;
     private static int TYPE_DEFALT = 3;
     private ViewDataBinding binding;
-
+    private List<WeatherBean> lists;
+public WeatherFragmentRecyclerViewAdapter(List<WeatherBean> lists){
+    this.lists = lists;
+}
     @Override
     public int getItemViewType(int position) {
         if (position == 0) {
@@ -30,7 +36,7 @@ public class WeatherFragmentRecyclerViewAdapter extends RecyclerView.Adapter<Wea
             return TYPE_SECONDE;
         } else if (position == 2) {
             return TYPE_THIRD;
-        }else {
+        } else {
             return TYPE_DEFALT;
         }
     }
@@ -51,8 +57,15 @@ public class WeatherFragmentRecyclerViewAdapter extends RecyclerView.Adapter<Wea
 
     @Override
     public void onBindViewHolder(WeatherFragmentRecyclerHolder holder, int position) {
+        if (position == 0) {
+            if (lists.size()>0) {
+                holder.getBinding().setVariable(BR.item, lists.get(0));
+            }
 
-        holder.getBinding().setVariable(BR.item, "aaa");
+        } else {
+            holder.getBinding().setVariable(BR.item, new WeatherBean.ResultsBean.DailyBean());
+
+        }
         holder.getBinding().executePendingBindings();
     }
 

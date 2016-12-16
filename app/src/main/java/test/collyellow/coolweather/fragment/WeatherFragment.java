@@ -17,11 +17,21 @@ import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 import test.collyellow.coolweather.App;
 import test.collyellow.coolweather.MyToast;
 import test.collyellow.coolweather.R;
 import test.collyellow.coolweather.adapter.WeatherFragmentRecyclerViewAdapter;
+import test.collyellow.coolweather.bean.WeatherBean;
 import test.collyellow.coolweather.databinding.WeatherFragmentBinding;
+import test.collyellow.coolweather.service.RetrofitService;
 
 /**
  * Created by collyellow on 2016/12/14.
@@ -32,15 +42,14 @@ public class WeatherFragment extends Fragment {
     public LocationClient mLocationClient = null;
     public BDLocationListener myListener = new MyLocationListener();
     private WeatherFragmentBinding binding;
+    private RetrofitService retrofitService;
+    private String locationCity;
+    private WeatherFragmentRecyclerViewAdapter adapter;
+    private List<WeatherBean> lists = new ArrayList<>();
 
     public class Presenter {
         public void onClick(View view) {
             switch (view.getId()) {
-                case R.id.header_one_fk_bt:
-                    Log.e("childe", "child = ??????????????");
-                    View childAt = binding.weatherFragmentRecyclerview.getChildAt(0);
-                    Log.e("childe", "child = " + childAt);
-                    break;
                 case R.id.weather_fragment_location_ll:
                     MyToast.show("aaaaaaaaaaa");
                     break;
@@ -57,14 +66,26 @@ public class WeatherFragment extends Fragment {
         mLocationClient.start();
         binding = DataBindingUtil.inflate(inflater, R.layout.weather_fragment, container, false);
         binding.setPresenter(new Presenter());
+        binding.setItem(new WeatherBean.ResultsBean.DailyBean());
+        requstWeather();
         binding.weatherFragmentRecyclerview.setLayoutManager(new LinearLayoutManager(App.context));
         initData();
         return binding.getRoot();
     }
 
-    private void initData() {
+    private void requstWeather() {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://api.thinkpage.cn/v3/weather/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        retrofitService = retrofit.create(RetrofitService.class);
+        //key=ezkig1mno74bzpcm&location=beijing&language=zh-Hans&unit=c&start=0&days=5
 
-        binding.weatherFragmentRecyclerview.setAdapter(new WeatherFragmentRecyclerViewAdapter());
+    }
+
+    private void initData() {
+        adapter = new WeatherFragmentRecyclerViewAdapter(lists);
+        binding.weatherFragmentRecyclerview.setAdapter(adapter);
 
 //        Log.e("height","height = "+height);
         binding.weatherFragmentRecyclerview.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -104,7 +125,7 @@ public class WeatherFragment extends Fragment {
         );//可选，默认高精度，设置定位模式，高精度，低功耗，仅设备
         option.setCoorType("bd09ll");//可选，默认gcj02，设置返回的定位结果坐标系
         int span = 1000;
-        option.setScanSpan(span);//可选，默认0，即仅定位一次，设置发起定位请求的间隔需要大于等于1000ms才是有效的
+        option.setScanSpan(0);//可选，默认0，即仅定位一次，设置发起定位请求的间隔需要大于等于1000ms才是有效的
         option.setIsNeedAddress(true);//可选，设置是否需要地址信息，默认不需要
         option.setOpenGps(true);//可选，默认false,设置是否使用gps
         option.setLocationNotify(true);//可选，默认false，设置是否当GPS有效时按照1S/1次频率输出GPS结果
@@ -117,11 +138,29 @@ public class WeatherFragment extends Fragment {
     }
 
     public class MyLocationListener implements BDLocationListener {
+
+
         @Override
         public void onReceiveLocation(BDLocation location) {
             String city = location.getCity();
             if (city != null) {
                 binding.weatherFragmentRecyclerviewCity.setText(city);
+                Call<WeatherBean> searchWeather = retrofitService.getSearchBooks("ezkig1mno74bzpcm", city, "zh-Hans", "c", 0, 5);
+                searchWeather.enqueue(new Callback<WeatherBean>() {
+                    @Override
+                    public void onResponse(Call<WeatherBean> call, Response<WeatherBean> response) {
+                        Log.e("body", response.body().getResults().get(0).getDaily().get(0).getCode_day() + "===");
+                        lists.clear();
+                        lists.add(response.body());
+                        binding.weatherFragmentRecyclerviewTest.setText(response.body().getResults().get(0).getDaily().get(0).getCode_day());
+                        adapter.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onFailure(Call<WeatherBean> call, Throwable t) {
+
+                    }
+                });
             }
         }
     }

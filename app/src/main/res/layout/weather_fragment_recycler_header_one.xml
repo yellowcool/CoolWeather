@@ -3,6 +3,9 @@
 
     <data>
 
+        <variable
+            name="item"
+            type="test.collyellow.coolweather.bean.WeatherBean" />
     </data>
 
     <RelativeLayout
@@ -11,15 +14,16 @@
         android:background="#00000000">
 
         <TextView
+            android:layout_marginLeft="15dp"
             android:id="@+id/recycler_header_one_t"
-            android:layout_width="60dp"
+            android:layout_width="wrap_content"
             android:layout_height="60dp"
             android:layout_marginTop="10dp"
             android:background="#00000000"
             android:gravity="center"
-            android:text="3"
+            android:text="@{item.results[0].daily[0].code_day==null?String.valueOf('f'):item.results[0].daily[0].low+String.valueOf('/')+item.results[0].daily[0].high}"
             android:textColor="#fff"
-            android:textSize="55sp" />
+            android:textSize="44sp" />
 
         <ImageView
             android:id="@+id/circle"
@@ -35,7 +39,7 @@
             android:layout_marginLeft="3dp"
             android:layout_marginTop="15dp"
             android:layout_toRightOf="@id/circle"
-            android:text="多云"
+            android:text="@{item.results[0].daily[0].text_day}"
             android:textColor="#fff"
             android:textSize="16sp" />
 
@@ -138,7 +142,7 @@
 
         <Button
             android:id="@+id/header_one_fk_bt"
-            android:layout_width="80dp"
+            android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="80dp"

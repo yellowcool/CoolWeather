@@ -1,6 +1,5 @@
 package test.collyellow.coolweather.view;
 
-import android.animation.ValueAnimator;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -8,7 +7,6 @@ import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
-import android.view.animation.LinearInterpolator;
 import android.widget.Scroller;
 
 import test.collyellow.coolweather.App;
@@ -22,6 +20,8 @@ public class MyRecyclerView extends RecyclerView {
     private LinearLayoutManager manager;
     private Scroller scroller = new Scroller(App.context);
 private int ddy = 0;
+    private LayoutManager layoutManager;
+
     public MyRecyclerView(Context context) {
         super(context);
     }
@@ -44,13 +44,14 @@ private int ddy = 0;
 
                 break;
             case MotionEvent.ACTION_UP:
-                LayoutManager layoutManager;
+
                 layoutManager = getLayoutManager();
                 if (layoutManager instanceof LinearLayoutManager) {
                     manager = (LinearLayoutManager) layoutManager;
                     int firstVisibleItemPosition = manager.findFirstVisibleItemPosition();
                     if (firstVisibleItemPosition == 0) {
                         animator();
+                        Log.e("ddddd","ddddddddddddddddddd");
                         ddy = 0;
                     }
                 }
@@ -61,7 +62,7 @@ private int ddy = 0;
 
     private void animator() {
         if (isAnimator) {
-            ValueAnimator valueAnimator = ValueAnimator.ofInt(400);
+         /*   ValueAnimator valueAnimator = ValueAnimator.ofInt(400);
             valueAnimator.setDuration(500);
             valueAnimator.setInterpolator(new LinearInterpolator());
             valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -77,9 +78,13 @@ private int ddy = 0;
                                                 }
                                             }
             );
-            valueAnimator.start();
+            valueAnimator.start();*/
+            Log.e("animator","111111111111111111");
+            layoutManager.smoothScrollToPosition(this,null,1);
         } else {
 //            manager.scrollToPositionWithOffset(0, 0);
+            layoutManager.smoothScrollToPosition(this,null,0);
+            Log.e("animator","0000000000000000000000");
         }
     }
 
