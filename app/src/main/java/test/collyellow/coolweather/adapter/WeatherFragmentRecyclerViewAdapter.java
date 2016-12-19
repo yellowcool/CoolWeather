@@ -4,6 +4,7 @@ import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.List;
@@ -11,7 +12,9 @@ import java.util.List;
 import test.collyellow.coolweather.App;
 import test.collyellow.coolweather.BR;
 import test.collyellow.coolweather.R;
+import test.collyellow.coolweather.bean.HeaderTwoBean;
 import test.collyellow.coolweather.bean.WeatherBean;
+import test.collyellow.coolweather.databinding.WeatherFragmentRecyclerHeaderSecondeBinding;
 import test.collyellow.coolweather.holder.WeatherFragmentRecyclerHolder;
 
 /**
@@ -25,9 +28,31 @@ public class WeatherFragmentRecyclerViewAdapter extends RecyclerView.Adapter<Wea
     private static int TYPE_DEFALT = 3;
     private ViewDataBinding binding;
     private List<WeatherBean> lists;
-public WeatherFragmentRecyclerViewAdapter(List<WeatherBean> lists){
-    this.lists = lists;
-}
+    private HeaderTwoBean headerTwoBean;
+    private WeatherFragmentRecyclerHeaderSecondeBinding secondeBinding;
+
+    public class Presenter {
+        public void onClick(View view) {
+
+            switch (view.getId()) {
+                case R.id.header_two_ib:
+                    if (headerTwoBean.getShow()) {
+                        headerTwoBean.setShow(false);
+                        secondeBinding.headerTwoIb.setRotation(180);
+                    } else {
+                        headerTwoBean.setShow(true);
+                        secondeBinding.headerTwoIb.setRotation(0);
+                    }
+                    break;
+            }
+        }
+    }
+
+
+    public WeatherFragmentRecyclerViewAdapter(List<WeatherBean> lists) {
+        this.lists = lists;
+    }
+
     @Override
     public int getItemViewType(int position) {
         if (position == 0) {
@@ -58,13 +83,19 @@ public WeatherFragmentRecyclerViewAdapter(List<WeatherBean> lists){
     @Override
     public void onBindViewHolder(WeatherFragmentRecyclerHolder holder, int position) {
         if (position == 0) {
-            if (lists.size()>0) {
+            if (lists.size() > 0) {
                 holder.getBinding().setVariable(BR.item, lists.get(0));
             }
 
+        } else if (position == 1) {
+            headerTwoBean = new HeaderTwoBean();
+//            holder.getBinding().setVariable(BR.item, headerTwoBean);headerTwoBean
+            secondeBinding = (WeatherFragmentRecyclerHeaderSecondeBinding) holder.getBinding();
+            secondeBinding.setItem(headerTwoBean);
+            secondeBinding.setPresenter(new Presenter());
+
         } else {
             holder.getBinding().setVariable(BR.item, new WeatherBean.ResultsBean.DailyBean());
-
         }
         holder.getBinding().executePendingBindings();
     }
